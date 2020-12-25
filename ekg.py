@@ -10,6 +10,9 @@ from PIL import Image
 from sklearn.model_selection import train_test_split
 from torchvision.datasets import ImageFolder
 from tqdm import tqdm
+import pywt
+import pywt.data
+
 
 input, target = [], []
 
@@ -29,9 +32,12 @@ def preprocessing(data_dir):
 
 	lead_matrix = ['none'] * len(dataset)
 	for idx in range(len(dataset)):
-		img = cv2.imread(dataset.imgs[idx][0],cv2.IMREAD_GRAYSCALE)
+		img = cv2.imread(dataset.imgs[idx][0],1)
+		# showImage('img',img)
 		lead_matrix = cropping(lead_matrix, idx, img)
 
+	showImage('img',lead_matrix[1][2])
+	
 def cropping(lead_matrix, idx, image):
 	
 	# top_1
@@ -59,6 +65,7 @@ def cropping(lead_matrix, idx, image):
 	# bottom_4
 	bot4 = image[634:756, 1035:1335]
 	
+	
 	lead_matrix[idx] = [top1,mid1,bot1,top2,mid2,bot2,top3,mid3,bot3,top4,mid4,bot4]
 	return lead_matrix
 
@@ -66,3 +73,28 @@ def cropping(lead_matrix, idx, image):
 if __name__ == "__main__":
 	data_dir = 'dataset'
 	preprocessing(data_dir)
+
+# training_data = []
+# training_label = []
+
+# directory_path = 'EKG_seg/'
+# folder = os.listdir(directory_path)
+# for entries in folder:
+# 	f = os.listdir(directory_path+entries+'/')
+# 	for entry in f:
+# 		if entry == 'img.png':
+# 			data = cv2.imread(os.path.join(directory_path,entries,entry),1)
+# 			training_data.append(data[:,:,0])
+# 		elif entry == 'label.png':
+# 			label = cv2.imread(os.path.join(directory_path,entries,entry),1)
+# 			training_label.append(label[:,:,0])
+# 		else:
+# 			assert('there is no img.png and label.png\n')
+
+# print(len(training_data))
+# print(len(training_label))
+
+# training_data = training_data.astype('float32')
+# training_label = training_label.astype('float32')
+
+# batch_size = 32
